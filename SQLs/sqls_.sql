@@ -1,9 +1,5 @@
 
-
-
-
-
--- # SQL QUESTION 2
+-- # SQL QUESTION 1
 select 
 he.department_id ,
 d.department ,
@@ -45,3 +41,21 @@ inner join departments d  on he.department_id = d.id
 inner join jobs j on he.job_id = j.id 
 group by department_id ,job_id 
 order by d.department , j.job  ASC ;
+
+
+
+-- SQL #2
+with emp as (
+SELECT 
+department_id ,
+count(*) as num_empl
+FROM hired_employees he 
+group by department_id)
+SELECT d.id, d.department, emp.num_empl from emp
+left join departments d on emp.department_id = d.id 
+where emp.num_empl > (SELECT
+count(*) / (SELECT COUNT(*)  from departments d )
+from 
+hired_employees he 
+where datetime BETWEEN '2021-01-31' and '2021-12-31')
+order by emp.num_empl desc
