@@ -5,6 +5,8 @@ import pdb
 import logging
 
 
+
+
 app = Flask(__name__)
 
 #HIRED_EMPLOYEES
@@ -65,7 +67,9 @@ def insert_job():
     
 
 if __name__ == "__main__":
-    create_tables()
+    #create_tables()
+
+    hired_employee_controller.load_hired_employees_to_db()
     """
     Here you can change debug and port
     Remember that, in order to make this API functional, you must set debug in False

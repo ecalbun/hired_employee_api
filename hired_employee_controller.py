@@ -1,6 +1,6 @@
 from db import get_db
 import datetime
-
+import csv
 
 
 # HIRED EMPLOYEES ACTIONS
@@ -132,11 +132,35 @@ def insert_job(name):
     db = get_db()
     cursor = db.cursor()
     id = get_last_id_job()
-    print(id)
     statement = f"INSERT INTO jobs(id,job) VALUES ({id},?)"
     cursor.execute(statement, [name])
     db.commit()
     return True
+
+def insert_job_with_id(id,name):
+    db = get_db()
+    cursor = db.cursor()
+    statement = "INSERT INTO jobs(id,job) VALUES (?,?)"
+    cursor.execute(statement,[id,name])
+    db.commit()
+    return True
+
+def insert_department_with_id(id,name):
+    db = get_db()
+    cursor = db.cursor()
+    statement = "INSERT INTO departments(id,department) VALUES (?,?)"
+    cursor.execute(statement,[id,name])
+    db.commit()
+    return True
+
+def insert_hired_employees_with_id(id,name,datetime,departmnet_id,job_id):
+    db = get_db()
+    cursor = db.cursor()
+    statement = "INSERT INTO hired_employees (id,name,datetime,department_id,job_id) VALUES (?,?,?,?,?)"
+    cursor.execute(statement,[id,name,datetime,departmnet_id,job_id])
+    db.commit()
+    return True
+
 
 #def delete_job():
     #todo
@@ -146,3 +170,24 @@ def insert_job(name):
 
 #def update_job():
     #todo
+
+
+# CARGA DE DATOS AL INICIAR LA API
+def load_jobs_to_db():
+    with open('data_files/jobs.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            insert_job_with_id(row[0],row[1])
+
+
+def load_departments_to_db():
+    with open('data_files/departments.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            insert_department_with_id(row[0],row[1])
+
+def load_hired_employees_to_db():
+    with open('data_files/hired_employees.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            insert_hired_employees_with_id(row[0],row[1],row[2],row[3],row[4])
